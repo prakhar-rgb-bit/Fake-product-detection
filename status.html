@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Verification Status</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .search-box button {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .product-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .product-info h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 30px;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -29px;
+            top: 0;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #e0e0e0;
+        }
+
+        .timeline-item.active::before {
+            background: #667eea;
+            box-shadow: 0 0 0 2px #667eea;
+        }
+
+        .timeline-item.completed::before {
+            background: #1db954;
+            box-shadow: 0 0 0 2px #1db954;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: -21px;
+            top: 18px;
+            width: 2px;
+            height: 100%;
+            background: #e0e0e0;
+        }
+
+        .timeline-item:last-child::after {
+            display: none;
+        }
+
+        .timeline-item.completed::after {
+            background: #1db954;
+        }
+
+        .timeline-content h4 {
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .timeline-content p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .timeline-content .time {
+            color: #999;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .status-badge.verified {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-badge.fake {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Check Product Verification Status</h1>
+
+    <div class="search-box">
+        <input type="text" id="trackingId" placeholder="Enter Product ID or QR Code">
+        <button onclick="trackProduct()">Check Status</button>
+    </div>
+
+    <div id="statusContent" style="display: none;">
+        <div class="product-info">
+            <h3>Product Verification Details</h3>
+            <div class="info-row">
+                <span><strong>Product ID:</strong></span>
+                <span id="productId">PRD12345</span>
+            </div>
+            <div class="info-row">
+                <span><strong>Verification Date:</strong></span>
+                <span id="orderDate">Jan 15, 2024</span>
+            </div>
+            <div class="info-row">
+                <span><strong>Product Name:</strong></span>
+                <span id="productName">Samsung Galaxy S24</span>
+            </div>
+            <div class="info-row">
+                <span><strong>Verification Status:</strong></span>
+                <span><span class="status-badge verified">Verified Authentic</span></span>
+            </div>
+        </div>
+
+        <h3 style="margin-bottom: 20px;">Verification Timeline</h3>
+        <div class="timeline">
+            <div class="timeline-item completed">
+                <div class="timeline-content">
+                    <h4>Product Registered</h4>
+                    <p>Product details submitted to verification system</p>
+                    <div class="time">Jan 15, 2024 - 10:30 AM</div>
+                </div>
+            </div>
+
+            <div class="timeline-item completed">
+                <div class="timeline-content">
+                    <h4>QR Code Generated</h4>
+                    <p>Unique UV-visible QR code created and applied</p>
+                    <div class="time">Jan 15, 2024 - 10:45 AM</div>
+                </div>
+            </div>
+
+            <div class="timeline-item completed">
+                <div class="timeline-content">
+                    <h4>AI Verification</h4>
+                    <p>Product authenticity verified using AI analysis</p>
+                    <div class="time">Jan 15, 2024 - 11:00 AM</div>
+                </div>
+            </div>
+
+            <div class="timeline-item completed">
+                <div class="timeline-content">
+                    <h4>Database Updated</h4>
+                    <p>Product marked as authentic in verification database</p>
+                    <div class="time">Jan 15, 2024 - 11:15 AM</div>
+                </div>
+            </div>
+
+            <div class="timeline-item completed">
+                <div class="timeline-content">
+                    <h4>Verification Complete</h4>
+                    <p>Product is now trackable and verified as authentic</p>
+                    <div class="time">Jan 15, 2024 - 11:30 AM</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Sample product database
+    const productDatabase = {
+        'PRD12345': {
+            id: 'PRD12345',
+            name: 'Samsung Galaxy S24',
+            verificationDate: 'Jan 15, 2024',
+            status: 'verified',
+            statusText: 'Verified Authentic'
+        },
+        'PRD67890': {
+            id: 'PRD67890',
+            name: 'iPhone 15 Pro',
+            verificationDate: 'Jan 10, 2024',
+            status: 'pending',
+            statusText: 'Verification Pending'
+        },
+        'PRD11111': {
+            id: 'PRD11111',
+            name: 'Fake Rolex Watch',
+            verificationDate: 'Jan 12, 2024',
+            status: 'fake',
+            statusText: 'Counterfeit Detected'
+        }
+    };
+
+    function trackProduct() {
+        const trackingId = document.getElementById('trackingId').value.trim().toUpperCase();
+        
+        if (!trackingId) {
+            alert('Please enter a Product ID or QR Code');
+            return;
+        }
+
+        const product = productDatabase[trackingId];
+        
+        if (product) {
+            // Update product details
+            document.getElementById('productId').textContent = product.id;
+            document.getElementById('orderDate').textContent = product.verificationDate;
+            document.getElementById('productName').textContent = product.name;
+            
+            // Update status badge
+            const statusBadge = document.querySelector('.status-badge');
+            statusBadge.textContent = product.statusText;
+            statusBadge.className = `status-badge ${product.status}`;
+            
+            // Show the status content
+            document.getElementById('statusContent').style.display = 'block';
+            
+            // Update timeline based on status
+            updateTimeline(product.status);
+        } else {
+            alert('Product not found. Please check your Product ID or QR Code.');
+        }
+    }
+
+    function updateTimeline(status) {
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        
+        // Reset all items
+        timelineItems.forEach(item => {
+            item.classList.remove('completed', 'active');
+        });
+        
+        if (status === 'verified') {
+            // Mark all as completed for verified products
+            timelineItems.forEach(item => {
+                item.classList.add('completed');
+            });
+        } else if (status === 'pending') {
+            // Mark first 3 as completed, 4th as active
+            for (let i = 0; i < 3; i++) {
+                timelineItems[i].classList.add('completed');
+            }
+            timelineItems[3].classList.add('active');
+        } else if (status === 'fake') {
+            // Only mark first item as completed for fake products
+            timelineItems[0].classList.add('completed');
+            // Update timeline content for fake products
+            timelineItems[1].querySelector('h4').textContent = 'Verification Failed';
+            timelineItems[1].querySelector('p').textContent = 'Product identified as counterfeit';
+            timelineItems[1].classList.add('active');
+        }
+    }
+
+    // Allow Enter key to trigger search
+    document.getElementById('trackingId').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            trackProduct();
+        }
+    });
+</script>
+
+</body>
+</html>
